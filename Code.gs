@@ -15,25 +15,25 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
    The number of languages you support. Please check the README.md for more
    information on column positions.
 */
-var NUMBER_OF_LANGUAGES = 1;
+var NUMBER_OF_LANGUAGES = 4;
 
 /* 
    The script expects two columns for iOS and Android identifiers, respectively,
    and a column after that with all of the string values. This is the position of
    the iOS column.
 */
-var FIRST_COLUMN_POSITION = 1;
+var FIRST_COLUMN_POSITION = 3;
 
 /*
    The position of the header containing the strings "Identifier iOS" and "Identifier Android"
 */
-var HEADER_ROW_POSITION = 1;
+var HEADER_ROW_POSITION = 2;
 
 /*
    True if iOS output should contain a `Localizable` `enum` that contains all of
    the keys as string constants.
 */
-var IOS_INCLUDES_LOCALIZABLE_ENUM = true;
+var IOS_INCLUDES_LOCALIZABLE_ENUM = false;
 
 
 // Constants
@@ -176,7 +176,7 @@ function makeAndroidString(object, textIndex, options) {
   for(var i=0; i<object.length; i++) {
     
     var o = object[i];
-    var identifier = o.identifierAndroid;
+    var identifier = o.key;
     
     var text = o.texts[textIndex];
     
@@ -250,7 +250,7 @@ function makeIosString(object, textIndex, options) {
   
   for(var i=0; i<object.length; i++) {
     var o = object[i];
-    var identifier = o.identifierIos;
+    var identifier = o.key;
     var text = o.texts[textIndex];
     
     if (text == undefined || text == "") {
@@ -275,7 +275,7 @@ function makeIosString(object, textIndex, options) {
    - returns: a string array of the headers
 */
 function getNormalizedHeaders(sheet, options) {
-  var headersRange = sheet.getRange(1, FIRST_COLUMN_POSITION, HEADER_ROW_POSITION, sheet.getMaxColumns());
+  var headersRange = sheet.getRange(HEADER_ROW_POSITION, FIRST_COLUMN_POSITION, 1, sheet.getMaxColumns());
   var headers = headersRange.getValues()[0];
   return normalizeHeaders(headers);
 }
@@ -361,7 +361,7 @@ function getObjects(data, keys) {
         cellData = "";
       }
       
-      if (keys[j] != "identifierIos" && keys[j] != "identifierAndroid") {
+      if (keys[j] != "key") {
         object["texts"].push(cellData);
       } else {
         object[keys[j]] = cellData;
